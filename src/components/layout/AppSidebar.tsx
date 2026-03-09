@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingCart, Package, History, ChevronLeft, ChevronRight, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, History, ChevronLeft, ChevronRight, Users, LogOut, Settings } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { title: "Inventory", url: "/inventory", icon: Package, roles: ["admin", "super_admin"] },
   { title: "History", url: "/history", icon: History, roles: ["kasir", "admin", "super_admin"] },
   { title: "User Management", url: "/users", icon: Users, roles: ["super_admin"] },
+  { title: "Settings", url: "/settings", icon: Settings, roles: ["admin", "super_admin"] },
 ];
 
 export function AppSidebar() {

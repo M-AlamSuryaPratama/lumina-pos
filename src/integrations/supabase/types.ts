@@ -76,6 +76,27 @@ export type Database = {
           },
         ]
       }
+      store_settings: {
+        Row: {
+          id: string
+          logo_url: string | null
+          store_name: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          logo_url?: string | null
+          store_name?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          logo_url?: string | null
+          store_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       transaction_items: {
         Row: {
           created_at: string

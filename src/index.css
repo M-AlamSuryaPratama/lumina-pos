@@ -179,52 +179,40 @@
 
 /* Print Styles - Only show receipt */
 @media print {
+  /* Reset everything */
+  *, *::before, *::after {
+    visibility: hidden !important;
+  }
+
   body {
     background: white !important;
     min-height: auto !important;
-  }
-
-  /* Hide everything */
-  body > * {
-    display: none !important;
-  }
-
-  /* Show only the dialog portal */
-  [data-radix-portal] {
-    display: block !important;
-    position: static !important;
-  }
-
-  [data-radix-portal] [role="dialog"] {
-    position: static !important;
-    transform: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: white !important;
+    margin: 0 !important;
     padding: 0 !important;
-    max-width: 100% !important;
-    width: 80mm !important;
-    margin: 0 auto !important;
   }
 
-  /* Hide overlay */
-  [data-radix-portal] > [data-state] {
-    display: none !important;
-  }
-  [data-radix-portal] > [role="dialog"] {
-    display: block !important;
-  }
-
-  /* Hide non-receipt elements inside dialog */
-  .print\\:hidden,
-  [data-radix-portal] [role="dialog"] button[class*="absolute"] {
-    display: none !important;
+  /* Make receipt visible */
+  #receipt-content,
+  #receipt-content * {
+    visibility: visible !important;
+    color: black !important;
   }
 
   #receipt-content {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 80mm !important;
+    margin: 0 auto !important;
+    padding: 8px !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
+    background: white !important;
+    z-index: 99999 !important;
+  }
+
+  /* Hide buttons and non-receipt UI */
+  .print\:hidden {
+    display: none !important;
   }
 }

@@ -11,6 +11,7 @@ import POSPage from "./pages/POSPage";
 import InventoryPage from "./pages/InventoryPage";
 import HistoryPage from "./pages/HistoryPage";
 import UserManagementPage from "./pages/UserManagementPage";
+import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 
@@ -63,6 +64,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={["super_admin"]}>
                     <UserManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+                    <SettingsPage />
                   </ProtectedRoute>
                 }
               />

@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { Transaction, TransactionItem } from "@/types/pos";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 interface ReceiptModalProps {
   open: boolean;
@@ -10,6 +11,11 @@ interface ReceiptModalProps {
 }
 
 export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) {
+  const { data: settings } = useStoreSettings();
+
+  const storeName = settings?.store_name || "Lumina POS";
+  const logoUrl = settings?.logo_url;
+
   if (!transaction) return null;
 
   const formatPrice = (price: number) =>
@@ -37,7 +43,7 @@ export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md print-receipt-container">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader className="print:hidden">
           <DialogTitle>Transaksi Berhasil 🎉</DialogTitle>
         </DialogHeader>
@@ -46,7 +52,10 @@ export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) 
         <div id="receipt-content" className="bg-white text-black p-6 rounded-lg font-mono text-sm space-y-4">
           {/* Store Header */}
           <div className="text-center border-b-2 border-dashed border-gray-400 pb-4">
-            <h2 className="text-xl font-bold tracking-wide">LUMINA POS</h2>
+            {logoUrl && (
+              <img src={logoUrl} alt={storeName} className="w-16 h-16 mx-auto mb-2 object-contain" />
+            )}
+            <h2 className="text-xl font-bold tracking-wide">{storeName}</h2>
             <p className="text-xs text-gray-500 mt-1">Struk Pembayaran</p>
           </div>
 
@@ -84,7 +93,7 @@ export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) 
           {/* Footer */}
           <div className="text-center text-xs text-gray-400 pt-3 border-t border-dashed border-gray-300">
             <p>Terima kasih atas kunjungan Anda!</p>
-            <p>— Lumina POS —</p>
+            <p>— {storeName} —</p>
           </div>
         </div>
 
