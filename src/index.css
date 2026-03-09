@@ -90,7 +90,7 @@
   }
 
   .glass-panel {
-    @apply bg-white/8 backdrop-blur-xl border border-white/12 shadow-xl rounded-xl;
+    @apply bg-white/10 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl;
   }
 
   .glass-button {
