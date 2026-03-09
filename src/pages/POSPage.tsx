@@ -82,6 +82,12 @@ export default function POSPage() {
           isProcessing={createTransaction.isPending}
         />
       </div>
+
+      <ReceiptModal
+        open={showReceipt}
+        onClose={() => setShowReceipt(false)}
+        transaction={receiptTransaction}
+      />
     </MainLayout>
   );
 }
