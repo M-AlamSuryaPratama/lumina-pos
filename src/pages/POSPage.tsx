@@ -7,6 +7,8 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { ShoppingCart } from "@/components/pos/ShoppingCart";
 import { ProductGrid } from "@/components/pos/ProductGrid";
 import { CategoryFilter } from "@/components/pos/CategoryFilter";
+import { ReceiptModal } from "@/components/pos/ReceiptModal";
+import { Transaction } from "@/types/pos";
 
 export default function POSPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
