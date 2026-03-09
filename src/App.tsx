@@ -67,6 +67,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+                    <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

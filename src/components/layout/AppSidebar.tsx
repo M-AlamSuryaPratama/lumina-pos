@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { title: "Inventory", url: "/inventory", icon: Package, roles: ["admin", "super_admin"] },
   { title: "History", url: "/history", icon: History, roles: ["kasir", "admin", "super_admin"] },
   { title: "User Management", url: "/users", icon: Users, roles: ["super_admin"] },
+  { title: "Settings", url: "/settings", icon: Settings, roles: ["admin", "super_admin"] },
 ];
 
 export function AppSidebar() {
