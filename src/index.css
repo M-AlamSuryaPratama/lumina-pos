@@ -131,7 +131,7 @@
 
   /* Cart item */
   .cart-item {
-    @apply glass-panel p-3 transition-all duration-200 hover:bg-white/12;
+    @apply glass-panel p-3 transition-all duration-200 hover:bg-white/15;
   }
 
   /* Scrollbar styling */
