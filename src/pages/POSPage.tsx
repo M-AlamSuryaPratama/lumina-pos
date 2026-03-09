@@ -7,6 +7,8 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { ShoppingCart } from "@/components/pos/ShoppingCart";
 import { ProductGrid } from "@/components/pos/ProductGrid";
 import { CategoryFilter } from "@/components/pos/CategoryFilter";
+import { ReceiptModal } from "@/components/pos/ReceiptModal";
+import { Transaction } from "@/types/pos";
 
 export default function POSPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -14,6 +16,8 @@ export default function POSPage() {
   const { data: categories = [] } = useCategories();
   const { cart, addToCart, updateQuantity, removeFromCart, clearCart, total } = useCart();
   const createTransaction = useCreateTransaction();
+  const [receiptTransaction, setReceiptTransaction] = useState<Transaction | null>(null);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const filteredProducts = selectedCategory
     ? products.filter((p) => p.category_id === selectedCategory)
@@ -21,8 +25,29 @@ export default function POSPage() {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return;
-    await createTransaction.mutateAsync(cart);
+    // Build transaction object with items before clearing cart
+    const items = cart.map((item) => ({
+      id: "",
+      transaction_id: "",
+      product_id: item.product.id,
+      quantity: item.quantity,
+      price: item.product.price,
+      subtotal: item.product.price * item.quantity,
+      created_at: new Date().toISOString(),
+      product: item.product,
+    }));
+    const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+    const result = await createTransaction.mutateAsync(cart);
     clearCart();
+
+    setReceiptTransaction({
+      id: result.id,
+      total,
+      created_at: result.created_at,
+      items,
+    });
+    setShowReceipt(true);
   };
 
   return (
@@ -57,6 +82,12 @@ export default function POSPage() {
           isProcessing={createTransaction.isPending}
         />
       </div>
+
+      <ReceiptModal
+        open={showReceipt}
+        onClose={() => setShowReceipt(false)}
+        transaction={receiptTransaction}
+      />
     </MainLayout>
   );
 }
