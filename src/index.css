@@ -176,3 +176,55 @@
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* Print Styles - Only show receipt */
+@media print {
+  body {
+    background: white !important;
+    min-height: auto !important;
+  }
+
+  /* Hide everything */
+  body > * {
+    display: none !important;
+  }
+
+  /* Show only the dialog portal */
+  [data-radix-portal] {
+    display: block !important;
+    position: static !important;
+  }
+
+  [data-radix-portal] [role="dialog"] {
+    position: static !important;
+    transform: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 80mm !important;
+    margin: 0 auto !important;
+  }
+
+  /* Hide overlay */
+  [data-radix-portal] > [data-state] {
+    display: none !important;
+  }
+  [data-radix-portal] > [role="dialog"] {
+    display: block !important;
+  }
+
+  /* Hide non-receipt elements inside dialog */
+  .print\\:hidden,
+  [data-radix-portal] [role="dialog"] button[class*="absolute"] {
+    display: none !important;
+  }
+
+  #receipt-content {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+}
