@@ -11,9 +11,9 @@ interface ProductGridProps {
 export function ProductGrid({ products, loading, onAddToCart }: ProductGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-auto custom-scrollbar flex-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 overflow-auto custom-scrollbar flex-1">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="glass-card p-4">
+          <div key={i} className="glass-card p-3 sm:p-4">
             <Skeleton className="w-full aspect-square rounded-xl mb-3 bg-white/10" />
             <Skeleton className="h-5 w-3/4 bg-white/10 mb-2" />
             <Skeleton className="h-4 w-1/2 bg-white/10" />
