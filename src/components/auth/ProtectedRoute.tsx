@@ -30,7 +30,8 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/" replace />;
+    // Redirect to first accessible page
+    return <Navigate to="/pos" replace />;
   }
 
   return <>{children}</>;
