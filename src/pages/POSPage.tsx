@@ -27,7 +27,7 @@ export default function POSPage() {
 
   return (
     <MainLayout>
-      <div className="flex gap-6 h-[calc(100vh-8rem)]">
+      <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-8rem)]">
         {/* Products Section */}
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex items-center justify-between">
