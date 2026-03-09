@@ -13,10 +13,10 @@ interface ReceiptModalProps {
 export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) {
   const { data: settings } = useStoreSettings();
 
-  if (!transaction) return null;
-
   const storeName = settings?.store_name || "Lumina POS";
   const logoUrl = settings?.logo_url;
+
+  if (!transaction) return null;
 
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("id-ID", {
