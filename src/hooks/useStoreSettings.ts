@@ -5,6 +5,8 @@ export interface StoreSettings {
   id: string;
   store_name: string;
   logo_url: string | null;
+  store_address: string;
+  store_phone: string;
   updated_at: string;
 }
 
@@ -26,8 +28,7 @@ export function useStoreSettings() {
 export function useUpdateStoreSettings() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (settings: { store_name: string; logo_url: string | null }) => {
-      // Get the single row
+    mutationFn: async (settings: { store_name: string; logo_url: string | null; store_address: string; store_phone: string }) => {
       const { data: existing } = await supabase
         .from("store_settings")
         .select("id")

@@ -80,19 +80,25 @@ export type Database = {
         Row: {
           id: string
           logo_url: string | null
+          store_address: string
           store_name: string
+          store_phone: string
           updated_at: string
         }
         Insert: {
           id?: string
           logo_url?: string | null
+          store_address?: string
           store_name?: string
+          store_phone?: string
           updated_at?: string
         }
         Update: {
           id?: string
           logo_url?: string | null
+          store_address?: string
           store_name?: string
+          store_phone?: string
           updated_at?: string
         }
         Relationships: []

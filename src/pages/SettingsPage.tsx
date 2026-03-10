@@ -4,7 +4,8 @@ import { useStoreSettings, useUpdateStoreSettings } from "@/hooks/useStoreSettin
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Save, Store, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Save, Store, Loader2, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
@@ -12,11 +13,15 @@ export default function SettingsPage() {
   const updateSettings = useUpdateStoreSettings();
   const [storeName, setStoreName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
+  const [storeAddress, setStoreAddress] = useState("");
+  const [storePhone, setStorePhone] = useState("");
 
   useEffect(() => {
     if (settings) {
       setStoreName(settings.store_name);
       setLogoUrl(settings.logo_url ?? "");
+      setStoreAddress(settings.store_address ?? "");
+      setStorePhone(settings.store_phone ?? "");
     }
   }, [settings]);
 
@@ -25,6 +30,8 @@ export default function SettingsPage() {
       await updateSettings.mutateAsync({
         store_name: storeName,
         logo_url: logoUrl || null,
+        store_address: storeAddress,
+        store_phone: storePhone,
       });
       toast.success("Pengaturan toko berhasil disimpan!");
     } catch {
@@ -59,7 +66,8 @@ export default function SettingsPage() {
             )}
             <div>
               <p className="text-lg font-bold text-foreground">{storeName || "Nama Toko"}</p>
-              <p className="text-xs text-muted-foreground">Preview tampilan di struk</p>
+              {storeAddress && <p className="text-xs text-muted-foreground">{storeAddress}</p>}
+              {storePhone && <p className="text-xs text-muted-foreground">{storePhone}</p>}
             </div>
           </div>
 
@@ -67,40 +75,28 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="store-name">Nama Toko</Label>
-              <Input
-                id="store-name"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
-                placeholder="Masukkan nama toko"
-                className="glass-input"
-              />
+              <Input id="store-name" value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="Masukkan nama toko" className="glass-input" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="store-address" className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Alamat Toko</Label>
+              <Textarea id="store-address" value={storeAddress} onChange={(e) => setStoreAddress(e.target.value)} placeholder="Jl. Contoh No. 123, Kota" className="glass-input min-h-[80px]" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="store-phone" className="flex items-center gap-1"><Phone className="w-3 h-3" /> No. WhatsApp / HP</Label>
+              <Input id="store-phone" value={storePhone} onChange={(e) => setStorePhone(e.target.value)} placeholder="08xxxxxxxxxx" className="glass-input" />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="logo-url">URL Logo Toko</Label>
-              <Input
-                id="logo-url"
-                value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-                placeholder="https://example.com/logo.png"
-                className="glass-input"
-              />
-              <p className="text-xs text-muted-foreground">
-                Masukkan URL gambar logo toko Anda. Logo akan ditampilkan di struk.
-              </p>
+              <Input id="logo-url" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" className="glass-input" />
+              <p className="text-xs text-muted-foreground">Masukkan URL gambar logo toko Anda.</p>
             </div>
           </div>
 
-          <Button
-            onClick={handleSave}
-            disabled={updateSettings.isPending}
-            className="w-full checkout-button"
-          >
-            {updateSettings.isPending ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4 mr-2" />
-            )}
+          <Button onClick={handleSave} disabled={updateSettings.isPending} className="w-full checkout-button">
+            {updateSettings.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Simpan Pengaturan
           </Button>
         </div>
