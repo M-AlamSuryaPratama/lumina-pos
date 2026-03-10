@@ -1,17 +1,37 @@
+import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { useTransactions } from "@/hooks/useTransactions";
-import { Receipt } from "lucide-react";
+import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
+import { useAuth } from "@/hooks/useAuth";
+import { ReceiptModal } from "@/components/pos/ReceiptModal";
+import { Transaction } from "@/types/pos";
+import { Receipt, Printer, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function HistoryPage() {
   const { data: transactions = [], isLoading } = useTransactions();
+  const deleteTransaction = useDeleteTransaction();
+  const { role } = useAuth();
+  const isSuperAdmin = role === "super_admin";
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
+  const [receiptTx, setReceiptTx] = useState<Transaction | null>(null);
+
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(price);
-  };
 
   return (
     <MainLayout>
@@ -33,8 +53,8 @@ export default function HistoryPage() {
             <div className="divide-y divide-white/10">
               {transactions.map((tx) => (
                 <div key={tx.id} className="p-4 hover:bg-white/5 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
                       <p className="font-medium text-foreground">
                         Transaksi #{tx.id.slice(0, 8)}
                       </p>
@@ -45,9 +65,52 @@ export default function HistoryPage() {
                         })}
                       </p>
                     </div>
-                    <p className="text-xl font-bold text-primary">
-                      {formatPrice(Number(tx.total))}
-                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <p className="text-xl font-bold text-primary">
+                        {formatPrice(Number(tx.total))}
+                      </p>
+                      {/* Reprint button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setReceiptTx(tx)}
+                        title="Cetak Ulang Struk"
+                      >
+                        <Printer className="w-4 h-4" />
+                      </Button>
+                      {/* Delete button - Super Admin only */}
+                      {isSuperAdmin && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                              title="Hapus Transaksi"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Hapus Transaksi?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Transaksi #{tx.id.slice(0, 8)} senilai {formatPrice(Number(tx.total))} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                onClick={() => deleteTransaction.mutate(tx.id)}
+                              >
+                                Hapus
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                    </div>
                   </div>
                   {tx.items && tx.items.length > 0 && (
                     <div className="mt-3 space-y-2">
@@ -88,6 +151,13 @@ export default function HistoryPage() {
           )}
         </div>
       </div>
+
+      {/* Reprint receipt modal */}
+      <ReceiptModal
+        open={!!receiptTx}
+        onClose={() => setReceiptTx(null)}
+        transaction={receiptTx}
+      />
     </MainLayout>
   );
 }

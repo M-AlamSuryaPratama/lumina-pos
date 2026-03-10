@@ -1,16 +1,29 @@
 import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useStoreSettings, useUpdateStoreSettings } from "@/hooks/useStoreSettings";
+import { useClearAllTransactions } from "@/hooks/useTransactions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Store, Loader2, Phone, MapPin } from "lucide-react";
+import { Save, Store, Loader2, Phone, MapPin, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
   const { data: settings, isLoading } = useStoreSettings();
   const updateSettings = useUpdateStoreSettings();
+  const clearAll = useClearAllTransactions();
   const [storeName, setStoreName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [storeAddress, setStoreAddress] = useState("");
@@ -99,6 +112,39 @@ export default function SettingsPage() {
             {updateSettings.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Simpan Pengaturan
           </Button>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="glass-card p-6 border-destructive/30">
+          <h2 className="text-lg font-semibold text-destructive mb-2">Zona Berbahaya</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Hapus seluruh riwayat transaksi. Tindakan ini tidak dapat dibatalkan.
+          </p>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" disabled={clearAll.isPending}>
+                <Trash2 className="w-4 h-4 mr-2" />
+                {clearAll.isPending ? "Menghapus..." : "Kosongkan Semua History"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Kosongkan Semua History?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Seluruh data transaksi dan item transaksi akan dihapus secara permanen. Tindakan ini tidak bisa dibatalkan.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={() => clearAll.mutate()}
+                >
+                  Ya, Hapus Semua
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </MainLayout>
