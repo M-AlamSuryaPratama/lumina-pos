@@ -31,7 +31,6 @@ export function useCreateTransaction() {
     mutationFn: async (cart: CartItem[]) => {
       const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
       
-      // Create transaction
       const { data: transaction, error: txError } = await supabase
         .from("transactions")
         .insert({ total })
@@ -40,7 +39,6 @@ export function useCreateTransaction() {
       
       if (txError) throw txError;
       
-      // Create transaction items
       const items = cart.map((item) => ({
         transaction_id: transaction.id,
         product_id: item.product.id,
@@ -55,7 +53,6 @@ export function useCreateTransaction() {
       
       if (itemsError) throw itemsError;
       
-      // Update stock
       for (const item of cart) {
         await supabase
           .from("products")
@@ -72,6 +69,61 @@ export function useCreateTransaction() {
     },
     onError: () => {
       toast.error("Gagal memproses transaksi");
+    },
+  });
+}
+
+export function useDeleteTransaction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (transactionId: string) => {
+      // Delete items first (foreign key)
+      const { error: itemsErr } = await supabase
+        .from("transaction_items")
+        .delete()
+        .eq("transaction_id", transactionId);
+      if (itemsErr) throw itemsErr;
+
+      const { error: txErr } = await supabase
+        .from("transactions")
+        .delete()
+        .eq("id", transactionId);
+      if (txErr) throw txErr;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      toast.success("Transaksi berhasil dihapus");
+    },
+    onError: () => {
+      toast.error("Gagal menghapus transaksi");
+    },
+  });
+}
+
+export function useClearAllTransactions() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const { error: itemsErr } = await supabase
+        .from("transaction_items")
+        .delete()
+        .neq("id", "00000000-0000-0000-0000-000000000000"); // delete all
+      if (itemsErr) throw itemsErr;
+
+      const { error: txErr } = await supabase
+        .from("transactions")
+        .delete()
+        .neq("id", "00000000-0000-0000-0000-000000000000"); // delete all
+      if (txErr) throw txErr;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      toast.success("Semua history transaksi berhasil dihapus");
+    },
+    onError: () => {
+      toast.error("Gagal menghapus history");
     },
   });
 }
