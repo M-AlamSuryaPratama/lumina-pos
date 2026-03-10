@@ -16,8 +16,9 @@ const navItems: NavItem[] = [
   { title: "POS Kasir", url: "/pos", icon: ShoppingCart, roles: ["kasir", "admin", "super_admin"] },
   { title: "Inventory", url: "/inventory", icon: Package, roles: ["admin", "super_admin"] },
   { title: "History", url: "/history", icon: History, roles: ["kasir", "admin", "super_admin"] },
+  { title: "Laporan", url: "/reports", icon: BarChart3, roles: ["admin", "super_admin"] },
   { title: "User Management", url: "/users", icon: Users, roles: ["super_admin"] },
-  { title: "Settings", url: "/settings", icon: Settings, roles: ["admin", "super_admin"] },
+  { title: "Settings", url: "/settings", icon: Settings, roles: ["super_admin"] },
 ];
 
 export function AppSidebar() {

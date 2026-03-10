@@ -76,6 +76,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/reports"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+                    <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
