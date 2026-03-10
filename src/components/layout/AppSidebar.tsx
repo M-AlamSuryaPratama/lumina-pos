@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingCart, Package, History, ChevronLeft, ChevronRight, Users, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, History, ChevronLeft, ChevronRight, Users, LogOut, Settings, BarChart3 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
